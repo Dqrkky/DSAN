@@ -1,7 +1,7 @@
 import server
 import asyncio
 
-node = server.DSANNode("C", 9003)
+node = server.DSANNode(node_id="C", port=9003)
 node.known_peers["A"] = ("127.0.0.1", 9001)
 node.known_peers["B"] = ("127.0.0.1", 9002)
 

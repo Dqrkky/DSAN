@@ -35,7 +35,7 @@ def decrypt(key, msg):
 class DSANNode:
     def __init__(self, node_id :str=None, host :str=None, port :int=None):
         self.node_id = node_id if node_id != None and isinstance(node_id, str) else os.urandom(4).hex()
-        self.host = host if host != None and isinstance(host, str) else "localhost"
+        self.host = host if host != None and isinstance(host, str) else "127.0.0.1"
         self.port = port if port != None and isinstance(port, int) else 9000
 
         self.sign_priv = ed25519.Ed25519PrivateKey.generate()
@@ -83,6 +83,7 @@ class DSANNode:
         }
 
     def verify_handshake(self, data :dict=None):
+        print(data)
 
         # Node ID
         node_id :str = data.get("node_id", None)
@@ -132,8 +133,6 @@ class DSANNode:
 
         payload = (
             node_id.encode() +
-            host.encode() +
-            str(port).encode() +
             ecdh +
             str(timestamp).encode()
         )
@@ -221,7 +220,6 @@ class DSANNode:
 
         except Exception as e:
             print(f"[{self.node_id}] ERROR:", e)
-
         writer.close()
 
     async def connect_to_peer(self, host: str, port: int):

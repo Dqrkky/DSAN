@@ -1,7 +1,7 @@
 import server
 import asyncio
 
-node = server.DSANNode("A", 9001)
+node = server.DSANNode(node_id="A", port=9001)
 # If there no bootstrap, we can pre-configure known peers
 # else we can discover them through the bootstrap node
 

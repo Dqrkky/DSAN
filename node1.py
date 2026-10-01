@@ -14,7 +14,8 @@ async def main():
     await asyncio.sleep(1)
     for pid, (host, port) in node.known_peers.items():
         if pid != node.node_id:
-            await node.connect_to_peer(host, port)
+            data = await node.connect_to_peer(host, port)
+            print(data)
 
 asyncio.gather(
     node.start(),

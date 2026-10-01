@@ -1,4 +1,4 @@
-import server
+import server  # noqa: I001
 import asyncio
 
 node = server.DSANNode(node_id="B", port=9002)

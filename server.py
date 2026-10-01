@@ -1,4 +1,4 @@
-import asyncio, json, time, os
+import asyncio, json, time, os  # noqa: I001
 
 from cryptography.hazmat.primitives.asymmetric import x25519, ed25519
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
@@ -33,7 +33,7 @@ def decrypt(key, msg):
 # ================= NODE =================
 
 class DSANNode:
-    def __init__(self, node_id :str=None, host :str=None, port :int=None):
+    def __init__(self, node_id :str=None, host :str=None, port :int=None):  # noqa: RUF013
         self.node_id = node_id if node_id != None and isinstance(node_id, str) else os.urandom(4).hex()
         self.host = host if host != None and isinstance(host, str) else "127.0.0.1"
         self.port = port if port != None and isinstance(port, int) else 9000
@@ -82,47 +82,47 @@ class DSANNode:
             "signature": signature.hex()
         }
 
-    def verify_handshake(self, data :dict=None):
+    def verify_handshake(self, data :dict=None):  # noqa: RUF013
         print(data)
 
         # Node ID
         node_id :str = data.get("node_id", None)
         if node_id == None or isinstance(node_id, str) == False:
-            raise Exception("Invalid handshake: missing node_id")
+            raise Exception("Invalid handshake: missing node_id")  # noqa: TRY002
 
         # Host
         host :str = data.get("host", None)
         if host == None or isinstance(host, str) == False:
-            raise Exception("Invalid handshake: missing host")
+            raise Exception("Invalid handshake: missing host")  # noqa: TRY002
 
         # Port
         port :int = data.get("port", None)
         if port == None or isinstance(port, int) == False:
-            raise Exception("Invalid handshake: missing port")
+            raise Exception("Invalid handshake: missing port")  # noqa: TRY002
 
         # ECDH
         ecdh :str = data.get("ecdh", None)
         if ecdh == None or isinstance(ecdh, str) == False:
-            raise Exception("Invalid handshake: missing ecdh")
+            raise Exception("Invalid handshake: missing ecdh")  # noqa: TRY002
 
         # Sign Pubkey
         sign_pub :str = data.get("sign_pub", None)
         if sign_pub == None or isinstance(sign_pub, str) == False:
-            raise Exception("Invalid handshake: missing sign_pub")
+            raise Exception("Invalid handshake: missing sign_pub")  # noqa: TRY002
 
         # Signature
         signature :str = data.get("signature", None)
         if signature == None or isinstance(signature, str) == False:
-            raise Exception("Invalid handshake: missing signature")
+            raise Exception("Invalid handshake: missing signature")  # noqa: TRY002
 
         # Timestamp
         timestamp :int = data.get("timestamp", None)
         if timestamp == None or isinstance(timestamp, int) == False:
-            raise Exception("Invalid handshake: missing timestamp")
+            raise Exception("Invalid handshake: missing timestamp")  # noqa: TRY002
 
         # Replay attack prevention (30s window)
         if abs(time.time() - timestamp) > 30:
-            raise Exception("Replay attack")
+            raise Exception("Replay attack")  # noqa: TRY002
 
         # Convert hex to bytes for crypto operations
         ecdh = bytes.fromhex(ecdh)
@@ -142,7 +142,7 @@ class DSANNode:
         # Trust / pinning
         if node_id in self.trusted:
             if self.trusted[node_id] != sign_pub:
-                raise Exception("MITM detected")
+                raise Exception("MITM detected")  # noqa: TRY002
         else:
             print(f"[{self.node_id}] Trusting new peer {node_id}")
             self.trusted[node_id] = sign_pub
@@ -168,7 +168,7 @@ class DSANNode:
     async def handle_peer_list(self, data):
         new_peers = data.get("peers", {})
         if new_peers == None or isinstance(new_peers, dict) == False:
-            raise Exception("Invalid peer list")
+            raise Exception("Invalid peer list")  # noqa: TRY002
 
         for pid, (host, port) in new_peers.items():
             if pid == self.node_id:
@@ -218,7 +218,7 @@ class DSANNode:
                 else:
                     print(f"[{self.node_id}] From {peer_id}:", decrypted)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"[{self.node_id}] ERROR:", e)
         writer.close()
 
@@ -268,7 +268,7 @@ class DSANNode:
                 **data
             }
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"[{self.node_id}] Connect failed:", e)
 
     async def start(self):
